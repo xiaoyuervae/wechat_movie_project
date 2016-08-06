@@ -64,39 +64,27 @@ exports.reply = function*(next) {
             this.body = '您点击了菜单中的链接：' + message.EventKey
         }
     }else if (message.MsgType === 'voice') {
-        var voiceText = message.Recognition ; 
-        var movies = yield movieApi.searchByName(voiceText) ;
-        var reply = [] ; 
-        if (movies && movies.length > 0) {
-            movies = movies.slice(0 , 10) ; //微信最多能显示10条图文消息
-            movies.forEach(function(movie) {
-                reply.push({
-                    title: movie.title ,
-                    description: movie.title ,
-                    picUrl: movie.poster ,
-                    url: movie.flash
-                })
-            })
-        }
-        else if (!movies || movies.length == 0) {
-            movies = yield movieApi.searchByDouban(voiceText) ; 
-            if (movies && movies.length > 0) {
-                movies = movies.slice(0 , 10) ; //微信最多能显示10条图文消息
-                movies.forEach(function(movie) {
-                    reply.push({
-                        title: movie.title ,
-                        description: movie.title ,
-                        picUrl: movie.images.large ,
-                        url: movie.alt
-                    })
-                })
-            }
-        } 
-        else {
-            reply = '并没有查询到有关' + content + '的电影\n' 
-            + '要不要换个名字试试' ;
-        }
-        this.body = reply ; 
+       var movies = yield movieApi.searchByName(content) ;
+       if (!movies || movies.length == 0) {
+           movies = yield movieApi.searchByDouban(content) ; 
+       } 
+
+       if (movies && movies.length > 0) {
+           reply = [] ; 
+           movies = movies.slice(0 , 10) ; //微信最多能显示10条图文消息
+           movies.forEach(function(movie) {
+               reply.push({
+                   title: movie.title ,
+                   description: movie.title ,
+                   picUrl: movie.poster ,
+                   url: 'http://xrqutcxhlh.proxy.qqbrowser.cc/movie/' + movie._id
+               })
+           })
+       }
+       else {
+           reply = '并没有查询到有关' + content + '的电影\n' 
+           + '要不要换个名字试试' ;
+       }
     }
     else if (message.MsgType === 'text') {
         var content = message.Content
@@ -132,8 +120,8 @@ exports.reply = function*(next) {
                     reply.push({
                         title: movie.title ,
                         description: movie.title ,
-                        picUrl: movie.images.large ,
-                        url: movie.alt
+                        picUrl: movie.poster ,
+                        url: 'http://xrqutcxhlh.proxy.qqbrowser.cc/movie/' + movie._id
                     })
                 })
             }

@@ -36,17 +36,20 @@ wechatApi.deleteMenu().then(function(){
     console.log(msg) ;
 })
 var app = new Koa() ;
-app.use(views(__dirname + '/app/views/pages' , {
-	extention: 'jade'
-})) ;
 var Router = require('koa-router') ; 
 var router = new Router() ; 
 var game = require('./app/controllers/game') ; 
-router.get('/movie' , game.movie) ; 
+app.use(views(__dirname + '/app/views', {
+  extension: 'jade'
+}))
+router.get('/movie' , game.guess) ; 
+router.get('/movie/:id' , game.find) ; 
 router.get('/wx' , wechat.hear) ;
 router.post('/wx' , wechat.hear) ;
+
 app
 	.use(router.routes()) 
 	.use(router.allowedMethods()) ; 
+
 app.listen(3000) ; 
 console.log('app is listening at 3000') ;

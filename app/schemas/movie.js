@@ -3,13 +3,15 @@ var Schema = mongoose.Schema ;
 var ObjectId = Schema.Types.ObjectId ; 
 var movieSchema = new mongoose.Schema({
 	title: String ,
-	doctor: String , 
+	director: String , 
+	doubanId: String ,
 	language: String , 
 	country: String , 
 	summary: String , 
 	flash: String , 
 	poster: String , 
 	year: Number , 
+	genres: [String] ,
 	pv: {type: Number , default: 0} , 
 	category: {type: ObjectId , ref: 'Category'} ,
 	meta:{

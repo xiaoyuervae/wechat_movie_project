@@ -1,8 +1,7 @@
 var Koa = require('koa') ; 
-var wechat = require('./wechat/g') ; 
-var reply = require('./wx/reply') ;
-var Wechat = require('./wechat/wechat') ;
+var wechat = require('./app/controllers/wechat') ; 
 var mongoose = require('mongoose') ; 
+var views = require('koa-views') ;
 var dbUrl = 'mongodb://localhost/movie' ;
 var fs = require('fs') ; 
 mongoose.connect(dbUrl) ; 
@@ -37,6 +36,9 @@ wechatApi.deleteMenu().then(function(){
     console.log(msg) ;
 })
 var app = new Koa() ;
+app.use(views(__dirname + '/app/views/pages' , {
+	extention: 'jade'
+})) ;
 var Router = require('koa-router') ; 
 var router = new Router() ; 
 var game = require('./app/controllers/game') ; 
@@ -46,6 +48,5 @@ router.post('/wx' , wechat.hear) ;
 app
 	.use(router.routes()) 
 	.use(router.allowedMethods()) ; 
-app.use(wechat(config , reply.reply)) ;
 app.listen(3000) ; 
 console.log('app is listening at 3000') ;

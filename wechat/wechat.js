@@ -1131,13 +1131,11 @@ Wechat.prototype.semantic = function(form) {
 }
 
 Wechat.prototype.reply = function () {
-	console.log('dsfasjkfkls')  ;
 	var content = this.body ; 
 	var message = this.weixin ; 
 	var xml = util.tpl(content , message) ; 
 	this.status = 200 ; 
 	this.type = 'application/xml' ; 
-	console.log('wolaile') ; 
 	this.body = xml ; 
 }
 module.exports = Wechat ; 

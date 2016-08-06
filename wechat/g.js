@@ -43,6 +43,7 @@ module.exports = function(config , handler){
 				// 暂停这里，走向外层逻辑
 				yield handler.call(this , next) ; 
 
+
 				// 调用reply方法
 				wechat.reply.call(this) ; 
 			}

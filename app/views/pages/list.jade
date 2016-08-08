@@ -28,8 +28,8 @@ block content
               td #{item.year}
               td #{moment(item.meta.updateAt).format('MM/DD/YYYY')}
               td #{item.pv}
-              td: a(target="_blank", href="/nodeport/movie/#{item._id}") 查看
-              td: a(target="_blank", href="/nodeport/admin/movie/update/#{item._id}") 修改
+              td: a(target="_blank", href="/movie/#{item._id}") 查看
+              td: a(target="_blank", href="/admin/movie/update/#{item._id}") 修改
               td
                 button.btn.btn-danger.del(type="button", data-id="#{item._id}") 删除
   script.
@@ -41,7 +41,7 @@ block content
 
         $.ajax({
           type: 'DELETE',
-          url: '/nodeport/admin/movie/list?id=' + id
+          url: '/admin/movie/list?id=' + id
         })
         .done(function(results) {
           if (results.success === 1) {

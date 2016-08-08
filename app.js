@@ -4,6 +4,8 @@ var mongoose = require('mongoose') ;
 var views = require('koa-views') ;
 var dbUrl = 'mongodb://localhost/movie' ;
 var fs = require('fs') ; 
+var session = require('koa-session') ; 
+var bodyParser = require('koa-bodyparser') ; 
 mongoose.connect(dbUrl) ; 
 //models loading
 var models_path = __dirname + '/app/models' ; 
@@ -38,15 +40,31 @@ wechatApi.deleteMenu().then(function(){
 var app = new Koa() ;
 var Router = require('koa-router') ; 
 var router = new Router() ; 
-var game = require('./app/controllers/game') ; 
+var moment = require('moment') ; 
 app.use(views(__dirname + '/app/views', {
-  extension: 'jade'
+  extension: 'jade' , 
+  locals: {
+  	moment: moment 
+  }
 }))
-router.get('/movie' , game.guess) ; 
-router.get('/movie/:id' , game.find) ; 
-router.get('/wx' , wechat.hear) ;
-router.post('/wx' , wechat.hear) ;
 
+app.keys = ['xiaoyuervae'] ; 
+app.use(session(app)) ;
+app.use(bodyParser()) ;
+var User = mongoose.model('User') ; 
+app.use(function *(next) {
+	var user = this.session.user ; 
+	if (user && user._id) {
+		this.session.user = yield User.findOne({_id: user._id}).exec() ;
+		this.state.user = this.session.user ; 
+	}
+	else {
+		this.session.user = null ; 
+	}
+	yield next ; 
+})
+
+require('./config/routes')(router) ;
 app
 	.use(router.routes()) 
 	.use(router.allowedMethods()) ; 

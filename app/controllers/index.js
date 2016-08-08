@@ -4,7 +4,7 @@ var movieApi = require('../api/movie') ;
 //index page
 exports.index = function *(){
 	var categories = yield movieApi.findAll() ; 
-	yield this.render('index' , {
+	yield this.render('pages/index' , {
 		title:'Movie首页' , 
 		categories: categories
 	})
@@ -23,7 +23,7 @@ exports.search = function *(){
 			var category = categories[0] || {} ; 
 			var movies = category.movies || [] ;
 			var results = movies.slice(index, index + count) ; 
-			yield this.render('results' , {
+			yield this.render('pages/results' , {
 				title:'Movie 分类列表页' , 
 				keyword: category.name ,
 				currentPage: page , 
@@ -31,12 +31,11 @@ exports.search = function *(){
 				totalPage: Math.ceil(movies.length / count) , 
 				movies: results
 			})
-		}
 	}
 	else{
 		var movies = movieApi.searchByName(q) ; 
 		var results = movies.slice(index, index + count) ; 
-		yield this.render('results' , {
+		yield this.render('pages/results' , {
 			title:'Movie 分类列表页' , 
 			keyword: q ,
 			currentPage: page , 

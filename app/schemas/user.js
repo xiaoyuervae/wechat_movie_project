@@ -3,6 +3,7 @@ var bcrypt = require('bcrypt') ;
 var SALT_WORK_FACTORY = 10 ; 
 
 var userSchema = new mongoose.Schema({
+	openid: String ,
 	name: {
 		unique: true ,
 		type: String 
@@ -49,13 +50,12 @@ userSchema.pre('save' , function(next){
 })
 
 userSchema.methods = {
-	comparePassword : function(_password , cb){
-		bcrypt.compare(_password , this.password , function(err , isMatched){
-			if(err){
-				return cb(err) ; 
-			}
-			cb(null , isMatched) ;
-		})
+	comparePassword : function(_password , password){
+		return function(cb) {
+			bcrypt.compare(_password , password , function(err , isMatched){
+				cb(err , isMatched) ;
+			})
+		}
 	}
 }
 

@@ -1,34 +1,30 @@
-var Comment = require('../models/comment')
+'use strict'
+
+var mongoose = require('mongoose')
+var Comment = mongoose.model('Comment')
 //comment saveComment
-exports.saveComment = function(req , res){
-	var _comment = req.body.comment ; 
+exports.saveComment = function *(next){
+	var _comment = this.request.body.comment ; 
 	var movieId = _comment.movie ; 
 	if(_comment.cid){
-		Comment.findById(_comment.cid , function(err , comment){
-			if(err){
-				console.log(err) ; 
-			}
-			var reply = {
-				from: _comment.from ,
-				to: _comment.tid ,
-				content: _comment.content
-			}
+		let comment = yield Comment.findOne({_id: _comment.cid}).exec() ; 
+		var reply = {
+			from: _comment.from ,
+			to: _comment.tid ,
+			content: _comment.content
+		}
 
-			comment.reply.push(reply) ; 
-			comment.save(function(err , comment){
-			if(err){
-				console.log(err) ; 
-			}
-				res.redirect('/detail/'+ movieId) ; 
-			})
-		})
+		comment.reply.push(reply) ; 
+		yield comment.save() ;
+		this.body = {success: 1} ; 
 	}else{
-		var comment = new Comment(_comment) ;	
-		comment.save(function(err , comment){
-			if(err){
-				console.log(err) ; 
-			}
-			res.redirect('/detail/'+ movieId) ; 
-		})
+		console.log(_comment.from) ;
+		let comment = new Comment({
+			movie: _comment.movie ,
+			from: _comment.from ,
+			content: _comment.content
+		}) ;	
+		yield comment.save() ;
+		this.body = {success: 1} ; 
 	}
 }

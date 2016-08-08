@@ -4,8 +4,8 @@ var Category = require('../models/category') ;
 var koa_request = require('koa-request') ; 
 var Promise = require('bluebird') ;
 var _ = require('lodash')
-var requst = Promise.promisify(require('request')) ;
-
+var request = Promise.promisify(require('request')) ;
+var co = require('co') ; //让普通的函数可以使用yield关键字
 function updateMovies(movie) {
 	var options = {
 		url: 'https://api.douban.com/v2/movie/subject/' + movie.doubanId , 
@@ -15,7 +15,8 @@ function updateMovies(movie) {
 	request(options)
 		.then(function(response) {
 			var data = response.body ; 
-			_extend(movie , {
+			console.log(data) ;
+			_.extend(movie , {
 				country: data.countries[0] ,
 				language: data.language ,
 				summary: data.summary
@@ -41,6 +42,9 @@ function updateMovies(movie) {
 							yield movie.save() ;
 						}
 					})
+				})
+				co(function *() {
+					yield catArray ;
 				})
 			}
 			else {
@@ -79,6 +83,27 @@ exports.searchByName = function *(q){
 	.find({title: new RegExp(q + '.*' , 'i')})
 	.exec()
 	return movies ; 
+}
+//search movie by hot or cold
+exports.findHotMovies = function *(hot, count) {
+  var movies = yield Movie
+      .find({})
+      .sort({'pv': hot})
+      .limit(count)
+      .exec()
+  return movies ;
+}
+
+exports.findMoviesByCate = function *(cat) {
+  var category = yield Category
+      .findOne({name: cat})
+      .populate({
+        path: 'movies',
+        select: 'title poster _id' ,
+        options: { limit: 6 }
+      })
+      .exec()
+  return category ;
 }
 
 //search movie by id
@@ -121,7 +146,7 @@ exports.searchByDouban = function *(q){
 						poster: item.images.large ,
 						year: item.year ,
 						genres: item.genres || [] 
-					})
+					}) ;
 
 					movie = yield movie.save() ; 
 					movies.push(movie) ; 
@@ -129,10 +154,10 @@ exports.searchByDouban = function *(q){
 			})
 		})
 
+		yield queryArray ; 
 		movies.forEach(function(movie) {
 			updateMovies(movie) ;
 		})
-		yield queryArray ; 
 	}
 	return movies ; 
 }

@@ -80,7 +80,7 @@ block content
         $.ajax({
           type: 'POST',
           data: $('#commentForm').serialize(),
-          url: '/nodeport/user/comment'
+          url: '/user/comment'
         })
         .done(function(results) {
           if (results.success === 1) {

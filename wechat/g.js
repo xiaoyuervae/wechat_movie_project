@@ -18,6 +18,7 @@ module.exports = function(config , handler){
 			var str = [token, timestamp, nonce].sort().join('') ;
 			var validatedStr = sha1(str) ; 
 			if (this.method == 'GET') {
+				console.log(signature) ;
 				if(signature == validatedStr){
 					this.body = echostr + '' ; 
 				}
@@ -25,7 +26,7 @@ module.exports = function(config , handler){
 					this.body = 'wrong' ; 
 				}
 			} else if (this.method == 'POST') {
-
+				console.log(signature) ;
 				if(signature != validatedStr){
 					this.body = 'wrong' ;
 					return false;

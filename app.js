@@ -6,6 +6,7 @@ var dbUrl = 'mongodb://localhost/movie' ;
 var fs = require('fs') ; 
 var session = require('koa-session') ; 
 var bodyParser = require('koa-bodyparser') ; 
+var options = require('./options.json') ; // 配置文件
 mongoose.connect(dbUrl) ; 
 //models loading
 var models_path = __dirname + '/app/models' ; 
@@ -27,9 +28,11 @@ var walk = function(path){
 		})
 }
 walk(models_path) ; 
+
 var menu = require('./wx/menu') ; 
 var wx = require('./wx/index') ; 
 var wechatApi = wx.getWechat() ; 
+
 var config = wx.getConfig ; 
 wechatApi.deleteMenu().then(function(){
     return wechatApi.createMenu(menu) ; 
@@ -69,5 +72,5 @@ app
 	.use(router.routes()) 
 	.use(router.allowedMethods()) ; 
 
-app.listen(3000) ; 
-console.log('app is listening at 3000') ;
+app.listen(options.port) ; 
+console.log('app is listening at ' + options.port) ;

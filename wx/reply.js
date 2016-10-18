@@ -1,5 +1,6 @@
 'use strict'
 var Movie = require('../app/api/movie') ;
+var options = require('../options') ; 
 var help = '亲爱的，欢迎关注科幻电影世界\n' +
    '回复 1 ~ 3，测试文字回复\n' +
    '回复 4，测试图文回复\n' +
@@ -7,7 +8,7 @@ var help = '亲爱的，欢迎关注科幻电影世界\n' +
    '回复 电影名字，查询电影信息\n' +
    '某些功能订阅号无权限，如网页授权\n' +
    '回复 语音，查询电影信息\n' +
-   '也可以点击 <a href="http://xrqutcxhlh.proxy.qqbrowser.cc/wechat/movie">语音查电影</a>'
+   '也可以点击 <a href="' + options.baseUrl + '/wechat/movie">语音查电影</a>'
 exports.reply = function*(next) {
     var message = this.weixin;
     if (message.MsgType == 'event') {
@@ -32,7 +33,7 @@ exports.reply = function*(next) {
                     title: movie.title,
                     description: movie.title,
                     picUrl: movie.poster,
-                    url: 'http://xrqutcxhlh.proxy.qqbrowser.cc/wechat/jump/' + movie._id 
+                    url: options.baseUrl+'/wechat/jump/' + movie._id 
                   })
                 })
               }
@@ -44,7 +45,7 @@ exports.reply = function*(next) {
                     title: movie.title,
                     description: movie.title,
                     picUrl: movie.poster,
-                    url: 'http://xrqutcxhlh.proxy.qqbrowser.cc/wechat/jump/' + movie._id 
+                    url: options.baseUrl+'/wechat/jump/' + movie._id 
                   })
                 })
               }
@@ -56,7 +57,7 @@ exports.reply = function*(next) {
                     title: movie.title,
                     description: movie.title,
                     picUrl: movie.poster,
-                    url: 'http://xrqutcxhlh.proxy.qqbrowser.cc/wechat/jump/' + movie._id 
+                    url: options.baseUrl+'/wechat/jump/' + movie._id 
                   })
                 })
               }
@@ -69,7 +70,7 @@ exports.reply = function*(next) {
                     title: movie.title,
                     description: movie.title,
                     picUrl: movie.poster,
-                    url: 'http://xrqutcxhlh.proxy.qqbrowser.cc/wechat/jump/' + movie._id 
+                    url: options.baseUrl+'/wechat/jump/' + movie._id 
                   })
                 })
               }
@@ -94,7 +95,7 @@ exports.reply = function*(next) {
                    title: movie.title ,
                    description: movie.title ,
                    picUrl: movie.poster ,
-                   url: 'http://xrqutcxhlh.proxy.qqbrowser.cc/wechat/jump/' + movie._id
+                   url: options.baseUrl+'/wechat/jump/' + movie._id
                })
            })
        }
@@ -140,7 +141,7 @@ exports.reply = function*(next) {
                         title: movie.title ,
                         description: movie.title ,
                         picUrl: movie.poster ,
-                        url: 'http://xrqutcxhlh.proxy.qqbrowser.cc/wechat/jump/' + movie._id
+                        url: options.baseUrl+'/wechat/jump/' + movie._id
                     })
                 })
             }
@@ -149,7 +150,7 @@ exports.reply = function*(next) {
                 + '要不要换个名字试试' ;
             }
         }
-        this.body = reply
+        this.body = reply ;
     }
-    yield next
+    yield next ;
 }

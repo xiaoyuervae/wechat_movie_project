@@ -7,6 +7,7 @@ var wechatApi = wx.getWechat() ;
 var util = require('../../libs/util') ;
 var movieApi = require('../api/movie') ;
 var koa_request = require('koa-request') ;
+var options = require('../../options') ; 
 exports.guess = function *(next) {
 	var data = yield wechatApi.fetchAccessToken() ; 
 	var access_token = data.access_token ; 
@@ -18,7 +19,7 @@ exports.guess = function *(next) {
 }
 exports.jump = function *(next) {
 	var movieId = this.params.id ;
-	var redirect = 'http://xrqutcxhlh.proxy.qqbrowser.cc/wechat/movie/' + movieId ; 
+	var redirect = options.baseUrl + '/wechat/movie/' + movieId ; 
 	var url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + wx.getConfig.wechat.appID + '&redirect_uri='+ redirect +'&response_type=code&scope=snsapi_base&state='+ movieId +'#wechat_redirect' ; 
 	this.redirect(url) ; 
 }

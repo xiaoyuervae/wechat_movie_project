@@ -1,3 +1,2 @@
 node_modules/
-config/wechat.txt
-config/wechat_ticket.txt
+*.txt
